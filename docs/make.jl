@@ -4,7 +4,7 @@ makedocs(
     modules = [NetCDF],
     format = Documenter.HTML(;
         prettyurls = get(ENV, "CI", "false") == "true",
-        canonical = "https://juliageo.github.io/NetCDF.jl",
+        canonical = "https://meggart.github.io/NetCDF.jl",
         assets = String[],
     ),
     sitename = "NetCDF.jl",
