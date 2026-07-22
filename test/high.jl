@@ -119,3 +119,9 @@ nccreate(fn4, "myvar3", "time", Inf)
 @test_throws ArgumentError ncread("", "")
 @test_throws ArgumentError nccreate("", "")
 @test_throws NetCDF.NetCDFError ncread("DoesNotExist.nc", "")
+
+# Test reading compression/deflate level
+fn_comp = tempname2()
+nccreate(fn_comp, "comp_var", "d1", 10, mode = NC_NETCDF4, compress = 5)
+nc = NetCDF.open(fn_comp)
+@test nc["comp_var"].compress == 5

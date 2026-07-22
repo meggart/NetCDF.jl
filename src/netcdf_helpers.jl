@@ -53,6 +53,9 @@ const dima = zeros(Int32, 1)
 const varida = zeros(Int32, 1)
 const vara = zeros(Int32, 1)
 const dumids = zeros(Int32, NC_MAX_DIMS)
+const shufflep = zeros(Int32, 1)
+const deflatep = zeros(Int32, 1)
+const deflate_levelp = zeros(Int32, 1)
 const gstart = zeros(UInt, NC_MAX_DIMS)
 const gcount = zeros(UInt, NC_MAX_DIMS)
 
@@ -347,7 +350,17 @@ function nc_inq_var(nc::NcFile, varid::Integer)
     nc_inq_var_chunking(nc.ncid, varid, storagep, chunk_sizea)
     chunksize = storagep[1] == NC_CONTIGUOUS ? ntuple(i -> 0, ndima[1]) :
                 ntuple(i -> chunk_sizea[i], ndima[1])
-    return name, typea[1], dimids, natta[1], ndima[1], isdimvar(nc, name), chunksize
+
+    compress = 0
+    try
+        nc_inq_var_deflate(nc.ncid, varid, shufflep, deflatep, deflate_levelp)
+        if deflatep[1] != 0
+            compress = Int(deflate_levelp[1])
+        end
+    catch
+        compress = 0
+    end
+    return name, typea[1], dimids, natta[1], ndima[1], isdimvar(nc, name), chunksize, compress
 end
 
 #Test if a variable name is also a dimension name

@@ -961,7 +961,7 @@ function open(fil::AbstractString; mode::Integer = NC_NOWRITE, readdimvar::Bool 
 
     #Read variable information
     for varid = 0:(nvar-1)
-        (name, nctype, dimids, natts, vndim, isdimvar, chunksize) = nc_inq_var(ncf, varid)
+        (name, nctype, dimids, natts, vndim, isdimvar, chunksize, compress) = nc_inq_var(ncf, varid)
         if (isdimvar)
             ncf.dim[name].varid = varid
         end
@@ -980,7 +980,7 @@ function open(fil::AbstractString; mode::Integer = NC_NOWRITE, readdimvar::Bool 
             dimids[vndim:-1:1],
             vdim[vndim:-1:1],
             atts,
-            0,
+            compress,
             chunksize,
             ncf,
         )
